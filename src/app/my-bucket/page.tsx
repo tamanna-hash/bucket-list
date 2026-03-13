@@ -1,6 +1,18 @@
-import React from "react";
+"use client"
 
 const MyBucket = () => {
+  const [goals, setGoals] = useState([]);
+
+  useEffect(() => {
+    fetchGoals();
+  }, []);
+
+  async function fetchGoals() {
+    const res = await fetch("/api/goals");
+    const data = await res.json();
+    setGoals(data);
+  }
+
   return (
     <>
       {/* name of each tab group should be unique */}

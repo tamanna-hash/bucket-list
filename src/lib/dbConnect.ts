@@ -2,9 +2,10 @@ import { Db, MongoClient, ServerApiVersion } from "mongodb";
 
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.DB_NAME;
-export const collections = {
-  GOALS: "goals",
-};
+
+if (!uri) throw new Error("Please add MONGODB_URI to .env.local");
+if (!dbName) throw new Error("Please add DB_NAME to .env.local");
+
 let cachedClient: MongoClient | null = null;
 let cachedDb: Db | null = null;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
