@@ -16,7 +16,22 @@ const MyBucket = () => {
     };
     fetchGoals();
   }, []);
+  // ADD
+  const addGoal = (goal: Goal) => {
+    setGoals((prev) => [goal, ...prev]);
+  };
 
+  // UPDATE
+  const updateGoal = (updatedGoal: Goal) => {
+    setGoals((prev) =>
+      prev.map((g) => (g._id === updatedGoal._id ? updatedGoal : g)),
+    );
+  };
+
+  // DELETE
+  const deleteGoal = (id: string) => {
+    setGoals((prev) => prev.filter((g) => g._id !== id));
+  };
   return (
     <>
       {/* name of each tab group should be unique */}
@@ -30,7 +45,8 @@ const MyBucket = () => {
         />
         <div className="tab-content bg-base-100 border-base-300 p-6">
           {goals.map((goal) => (
-           <GoalsCard key={goal._id} goal={goal}/>
+            <GoalsCard key={goal._id} goal={goal} onUpdate={updateGoal}
+          onDelete={deleteGoal} />
           ))}
         </div>
 

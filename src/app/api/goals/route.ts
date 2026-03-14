@@ -24,18 +24,21 @@ export async function POST(req: NextRequest) {
 
 // update goal
 export async function PUT(req: NextRequest) {
-  const { id, ...updateFields } = await req.json();
+  const { id, ...editedGoal } = await req.json();
   if (!id)
     return NextResponse.json({ error: "ID is required" }, { status: 400 });
   const updatedFields = {
-    $set: updateFields,
+    $set: editedGoal,
   };
   const goals = await getGoalsCollection();
-  const result = await goals.updateOne(
-    { _id: new ObjectId(id) },
-    updatedFields,
-  );
-  return NextResponse.json(result);
+  await goals.updateOne({ _id: new ObjectId(id) }, updatedFields);
+
+  const updatedGoal = await goals.findOne({
+    _id: new ObjectId(id),
+  });
+
+  return NextResponse.json(updatedGoal);
+  // return NextResponse.json(result);
 }
 
 // delete goal

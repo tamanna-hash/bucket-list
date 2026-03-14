@@ -1,12 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function AddBucket() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -21,9 +23,19 @@ export default function AddBucket() {
       if (res.ok) {
         setTitle("");
         setDescription("");
-        alert("Bucket added!");
+        Swal.fire({
+          title: "Goal Added",
+          icon: "success",
+          draggable: true,
+        });
+        router.push("/");
       } else {
-        alert("Failed to add bucket.");
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+          // footer: '<a href="#">Why do I have this issue?</a>',
+        });
       }
     } catch (err) {
       console.error(err);
