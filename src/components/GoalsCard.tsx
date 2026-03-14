@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { EditedGoal, Goal, GoalsCardProps } from "../lib/types";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const GoalsCard = ({ goal, onUpdate, onDelete }: GoalsCardProps) => {
   const { title, description } = goal;
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedGoal, setEditedGoal] = useState<EditedGoal>({
     title,
     description,
   });
   const [isUpdating, setIsUpdating] = useState(false);
-
   const handleUpdate = async () => {
     setIsUpdating(true);
     try {
@@ -74,6 +73,30 @@ const GoalsCard = ({ goal, onUpdate, onDelete }: GoalsCardProps) => {
       }
     });
   };
+  const handleToggle = async () => {
+    const updatedCompleted = !(goal.completed ?? false);
+
+    try {
+      const res = await fetch("/api/goals", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: goal._id,
+          completed: updatedCompleted,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to update");
+
+      const updatedGoal: Goal = await res.json();
+      toast.success("Goal status updated");
+      onUpdate(updatedGoal); // update UI instantly
+    } catch (error) {
+      console.error("Toggle failed:", error);
+    }
+  };
   return (
     <div className="p-4 m-4 rounded-2xl border border-gray-200">
       <div className="flex justify-between items-center">
@@ -94,6 +117,12 @@ const GoalsCard = ({ goal, onUpdate, onDelete }: GoalsCardProps) => {
           >
             Delete
           </button>
+          <input
+            type="checkbox"
+            checked={goal.completed ?? false}
+            onChange={handleToggle}
+            className="checkbox checkbox-accent"
+          />
         </div>
       </div>
 

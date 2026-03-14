@@ -13,6 +13,7 @@
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-toastify": "^11.0.5",
     "sweetalert2": "^11.26.22",
     "typescript": "^5.9.3"
   },
